@@ -1,0 +1,21 @@
+{'screen_roi': (0, 0, 2560, 1600),
+ 'commands': [
+'templates/1.png', 2, 
+'templates/2.png', 3, 
+'templates/3.png', 'templates/3.png', 'templates/3.png', 'templates/3.png', 'templates/3.png', 'templates/3.png',  'templates/3.png',
+
+'templates/4.png', 5,
+'templates/5.png', 660,
+'templates/6.png', 3,
+
+'templates/7.png', 5,
+'templates/8.png', 720,
+'templates/6.png', 3,
+
+'templates/9.png', 5,
+'templates/10.png', 375,
+'templates/6.png', 3,
+
+'templates/11.png', 5,
+'templates/12.png', 120,
+'templates/6.png', 3]}
