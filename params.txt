@@ -1,4 +1,0 @@
-{'screen_roi': (0, 0, 2560, 1600),
- 'commands': [
-'templates/1.png', 2, 
-'templates/2.png', 3, ]}
