@@ -21,7 +21,7 @@ This is a repository that can help you turn your PC into a robot student. For ex
 2. Run *‘auto_key.py’* and then move the mouse to the target text box within 5 seconds
 3. Wait for input completion
 
-<img src="./Auto_Key/figures/barrier.png" alt="barrier" style="zoom:50%;" />
+<img src="./Auto_Key/figures/barrier.png" alt="barrier" style="zoom:25%;" />
 
 ![test](./Auto_Key/figures/test.gif)
 
