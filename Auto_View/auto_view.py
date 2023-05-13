@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 
@@ -5,6 +6,8 @@ from PIL import ImageGrab
 import numpy as np
 import cv2
 import pyautogui
+import pynput.mouse as py_mouse
+import pynput.keyboard as py_key
 
 
 # 倒数计时并打印
@@ -41,10 +44,10 @@ def template_match(img, template, mask=None):
 
 
 class Auto_View:
-    def __init__(self, params_txt):
-        params = txt2cache(params_txt)  # 从txt中读取配置
-        self.screen_roi = params['screen_roi']  # 屏幕分辨率
-        self.command_list = params['commands']  # 操作指令列表
+    def __init__(self):
+        self.screen_roi = [0, 0] + list(pyautogui.size())  # 屏幕分辨率
+        self.thread_killer = False
+        self.mouse_ctr = py_mouse.Controller()
 
     def grab_img(self):
         # 截图
@@ -53,16 +56,71 @@ class Auto_View:
         img = cv2.cvtColor(np.array(img.convert('RGB')), cv2.COLOR_RGB2BGR)
         return img
 
-    def start_work(self):
+    def on_mouse_click(self, x, y, button, pressed):
+        # stop listener
+        if self.thread_killer:
+            return False
+        print(f'{"Pressed" if pressed else "Released"} {button}: {(x, y)}')
+        if pressed:
+            button = 'left' if str(button) == 'Button.left' else 'right'
+            with open('action_log.txt', 'a') as action_log:
+                action_log.write(f'"click(x={x}, y={y}, button=\'{button}\')", 1,\n')
+
+    def on_mouse_scroll(self, x, y, dx, dy):
+        # stop listener
+        if self.thread_killer:
+            return False
+        print(f'Scrolled: {(x, y, dx, dy)}')
+        with open('action_log.txt', 'a') as action_log:
+            action_log.write(f'"scroll({dx}, {dy})", 0.5,\n')
+
+    def on_key_press(self, key):
+        # stop listener
+        if str(key) == 'Key.esc':
+            self.thread_killer = True
+            return False
+        print(f'key pressed: {key}')
+
+    def start_log(self):
+        # 创建日志
+        with open('action_log.txt', 'w') as action_log:
+            action_log.write('{"commands": [\n')
         countdown(5)
-        for i, command in enumerate(self.command_list):
+        # 连接事件以及释放
+        mouse_listener = py_mouse.Listener(on_click=self.on_mouse_click, on_scroll=self.on_mouse_scroll)
+        key_listener = py_key.Listener(on_release=self.on_key_press)
+        # 启动监听线程
+        mouse_listener.start()
+        key_listener.start()
+        # 阻塞线程
+        mouse_listener.join()
+        key_listener.join()
+        print('log over')
+        with open('action_log.txt', 'a') as action_log:
+            action_log.write(']}')
+        self.thread_killer = False
+
+    def start_work(self, params_txt):
+        # 解析
+        params = txt2cache(params_txt)  # 从txt中读取配置
+        command_list = params['commands']  # 操作指令列表
+        # 执行
+        countdown(5)
+        for i, command in enumerate(command_list):
             print(f'perform operation: {i}')
-            # 如果是路径字符串: 截图 + 读图匹配 + 鼠标点击
             if type(command) is str:
-                img = self.grab_img()  # 截图
-                match_res = template_match(img, cv2.imread(command, 0), mask=None)  # 读图匹配
-                mouse_loc = np.array([np.mean(match_res[[0, 2]]), np.mean(match_res[[1, 3]])])
-                pyautogui.click(x=mouse_loc[0], y=mouse_loc[1], clicks=1, interval=0, button='left')  # 鼠标点击
+                # 如果是图片路径: 截图 + 读图匹配 + 鼠标移动
+                if os.path.isfile(command):
+                    img = self.grab_img()  # 截图
+                    match_res = template_match(img, cv2.imread(command, 0), mask=None)  # 读图匹配
+                    mouse_loc = np.array([np.mean(match_res[[0, 2]]), np.mean(match_res[[1, 3]])])
+                    pyautogui.moveTo(x=mouse_loc[0], y=mouse_loc[1])
+                # 如果是指令则执行
+                else:
+                    if 'scroll' in command:
+                        eval(f'self.mouse_ctr.{command}')
+                    else:
+                        eval(f'pyautogui.{command}')
             # 如果是数: 则等待相应时间
             elif type(command) in (int, float):
                 time.sleep(command)
@@ -70,5 +128,6 @@ class Auto_View:
 
 
 if __name__ == '__main__':
-    auto_view = Auto_View('params.txt')
-    auto_view.start_work()
+    auto_view = Auto_View()
+    # auto_view.start_log()
+    auto_view.start_work('action_log.txt')  # params.txt

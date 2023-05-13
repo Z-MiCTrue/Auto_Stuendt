@@ -1,4 +1,10 @@
-{'screen_roi': (0, 0, 2560, 1600),
- 'commands': [
-'templates/1.png', 2, 
-'templates/2.png', 3, ]}
+{'commands': [
+'scroll(0, 1)', 2,
+]}
+
+# operation list - mouse:
+# moveTo(100, 100, duration=0.25) 鼠标移动到 (100,100) 持续0.25s
+# dragTo(100, 200, button='left') 鼠标左键拖拽到 (100, 200)
+# click(clicks=2, interval=0.25, button='left') 鼠标单击
+# doubleClick(button='left') 鼠标双击
+# scroll(0, 1) 鼠标向上滚动1格 (调用 pynput)

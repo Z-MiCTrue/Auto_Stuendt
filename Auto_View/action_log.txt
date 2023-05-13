@@ -1,0 +1,14 @@
+{"commands": [
+"click(x=325, y=1050, button='left')", 1,
+"click(x=328, y=84, button='left')", 4,
+"scroll(0, -1)", 0.1,
+"scroll(0, -1)", 0.1,
+"scroll(0, -1)", 0.1,
+"click(x=983, y=416, button='left')", 4,
+"scroll(0, -1)", 0.1,
+"scroll(0, -1)", 0.1,
+"scroll(0, -1)", 0.1,
+"scroll(0, 1)", 0.1,
+"click(x=496, y=517, button='left')", 4,
+"click(x=335, y=599, button='left')", 4,
+]}
