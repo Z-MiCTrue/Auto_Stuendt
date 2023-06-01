@@ -17,7 +17,7 @@ pyautogui
 ### Auto_Key
 1. Copy all text into *'source. txt'* and save it
 2. Run *‘auto_key.py’* and then move the mouse to the target text box within 5 seconds
-3. Wait for input completion  
+3. Wait for input completion
 <img src="./Auto_Key/figures/barrier.png" alt="barrier" style="zoom:35%;" />
 ![test](./Auto_Key/figures/test.gif)
 
