@@ -10,7 +10,7 @@ pyautogui
 
 ## Quick start
 ### Auto_View
-1. Place the screenshot of the icons you need to click under the `templates` folder
+1. Place the screenshot of the icons you need to click under the [`templates`](./Auto_View/) folder
 2. Modify parameters such as screen resolution, template image path, and wait time in [`params.txt`](./Auto_View/params.txt)
 3. Run [`auto_view.py`](./Auto_View/auto_view.txt)
 
